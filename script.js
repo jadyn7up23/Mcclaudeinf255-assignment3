@@ -117,6 +117,23 @@ const availableButton = document.querySelector("#show-available");
 const adoptedButton = document.querySelector("#show-adopted");
 const sortSelect = document.querySelector("#sort-animals");
 
-// Show the initial shelter list when the script loads.
-displayAnimals(animals);
-updateCount();
+// Keep the chosen filter and sort in state so adoption changes preserve the view.
+allButton.addEventListener("click", function () {
+	activeFilter = "all";
+	updateDisplay();
+});
+availableButton.addEventListener("click", function () {
+	activeFilter = "available";
+	updateDisplay();
+});
+adoptedButton.addEventListener("click", function () {
+	activeFilter = "adopted";
+	updateDisplay();
+});
+sortSelect.addEventListener("change", function () {
+	activeSort = sortSelect.value;
+	updateDisplay();
+});
+
+// Use the same rendering path for the first load and later user actions.
+updateDisplay();
