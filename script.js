@@ -76,9 +76,40 @@ function toggleAdoption(animalId) {
 }
 
 function updateDisplay() {
+	// sort changes its array in place. Copying preserves the shelter's original
+	// order so choosing Original order still works after another sort.
+	let visibleAnimals = animals.slice();
+	if (activeFilter === "available") {
+		visibleAnimals = visibleAnimals.filter(function (animal) {
+			return !animal.adopted;
+		});
+	} else if (activeFilter === "adopted") {
+		visibleAnimals = visibleAnimals.filter(function (animal) {
+			return animal.adopted;
+		});
+	}
+
+	if (activeSort === "name") {
+		visibleAnimals.sort(function (first, second) {
+			return first.name.localeCompare(second.name);
+		});
+	} else if (activeSort === "age") {
+		visibleAnimals.sort(function (first, second) {
+			return first.age - second.age;
+		});
+	}
+	displayAnimals(visibleAnimals);
+	updateCount();
 }
 
 function updateCount() {
+	// Count the entire shelter, so filters do not change the available total.
+	const availableAnimals = animals.filter(function (animal) {
+		return !animal.adopted;
+	});
+	document.querySelector("#animal-count").textContent =
+		availableAnimals.length + " of " + animals.length +
+		" animals are available for adoption.";
 }
 
 const allButton = document.querySelector("#show-all");
